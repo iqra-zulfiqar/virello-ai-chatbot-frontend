@@ -6,12 +6,12 @@ export default function Contact() {
       <style>{`
         .contact-section {
           position: relative;
-          min-height: 440px;
+          min-height: 320px;        /* ← updated */
           overflow: hidden;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 80px 24px;
+          padding: 48px 24px;
         }
 
         .contact-content {
@@ -58,8 +58,8 @@ export default function Contact() {
 
         @media (max-width: 480px) {
           .contact-section {
-            min-height: 380px;
-            padding: 64px 20px;
+            min-height: 220px;
+            padding: 40px 20px;
           }
           .contact-btn {
             padding: 14px 32px;
@@ -69,13 +69,13 @@ export default function Contact() {
 
         @media (max-width: 360px) {
           .contact-section {
-            padding: 56px 16px;
+            padding: 36px 16px;
           }
         }
       `}</style>
 
       <section id="contact" className="contact-section">
-        {/* Gradient layers */}
+        {/* Gradient layers — unchanged */}
         <div style={{ position: "absolute", inset: 0, background: "#f7e8d0" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 55% 60% at -5% 95%, #3d1fa3 0%, transparent 55%)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 80% at 5% 45%, #e040a0 0%, transparent 52%)" }} />

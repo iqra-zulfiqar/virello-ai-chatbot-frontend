@@ -205,7 +205,7 @@ export default function About() {
           }}
         >
           Virello Studio is a digital agency obsessed with brand storytelling,
-          design systems, and digital experiences that actually move the needle.
+          design systems and digital experiences that actually move the needle.
         </motion.p>
         <motion.p
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={3}
@@ -216,7 +216,7 @@ export default function About() {
           }}
         >
           We partner with ambitious founders and growth-stage companies who know
-          their work matters — they just need the world to see it.
+          their work matters, they just need the world to see it.
         </motion.p>
 
         {/* Stat cards */}
@@ -308,7 +308,7 @@ export default function About() {
             color: "#f5f0ea", fontWeight: 400,
             lineHeight: 1.5, margin: 0, fontStyle: "italic",
           }}>
-            "Great brands aren't built overnight — they're{" "}
+            "Great brands aren't built overnight, they're{" "}
             <span style={{ color: "#c8e87a" }}>engineered with intent</span>{" "}
             and grown with relentless focus."
           </p>
