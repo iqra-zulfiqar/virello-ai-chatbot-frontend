@@ -1,15 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
-// ✅ FIXED API BASE
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:5000";
-
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const BOT_NAME = "Virello Studio";
-const BOT_SUB = "We're here to help";
+const BOT_SUB  = "We're here to help";
 
-const SESSION_ID = `sess_${Date.now()}_${Math.random()
-  .toString(36)
-  .slice(2, 8)}`;
+const SESSION_ID = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
@@ -70,6 +65,7 @@ const css = `
   align-items: center;
   justify-content: center;
   border: 2px solid white;
+  z-index: 1;
 }
 
 /* ── PANEL ── */
@@ -126,15 +122,6 @@ const css = `
 .cb-sub {
   color: var(--muted);
   font-size: 12px;
-}
-
-.cb-close {
-  background: rgba(0,0,0,0.06);
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
-  cursor: pointer;
 }
 
 /* ── MESSAGES ── */
@@ -207,6 +194,9 @@ const css = `
   height: 42px;
   border-radius: 12px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 `;
 
@@ -229,16 +219,43 @@ function renderMarkdown(text) {
   return text.replace(/\n/g, "<br/>");
 }
 
-const SendIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M22 2L11 13"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
+/* ✅ SINGLE UNIFIED BOT ICON */
+const BotAvatarIcon = ({ size = 18 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="white"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="8" width="18" height="12" rx="3" />
+    <path d="M9 8V6a3 3 0 016 0v2" />
+    <circle cx="9" cy="14" r="1.2" fill="white" stroke="none" />
+    <circle cx="15" cy="14" r="1.2" fill="white" stroke="none" />
   </svg>
 );
+
+const SendIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="white"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="22" y1="2" x2="11" y2="13" />
+    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+  </svg>
+);
+
+/* ✅ FAB now uses SAME bot icon system */
+const FabIcon = ({ size = 26 }) => <BotAvatarIcon size={size} />;
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -276,12 +293,9 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      // ✅ FIXED ROUTE
-      const res = await fetch(`${API_BASE}/api/chat`, {
+      const res = await fetch(`${API_BASE}/chat`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: [...buildHistory(), { role: "user", content: input }],
           sessionId: SESSION_ID,
@@ -299,9 +313,7 @@ export default function Chatbot() {
           time: ts(),
         },
       ]);
-    } catch (error) {
-      console.error(error);
-
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
@@ -324,7 +336,9 @@ export default function Chatbot() {
         <div className="cb-panel">
           <div className="cb-header">
             <div className="cb-header-left">
-              <div className="cb-avatar">🤖</div>
+              <div className="cb-avatar">
+                <BotAvatarIcon size={20} />
+              </div>
 
               <div>
                 <div className="cb-title">{BOT_NAME}</div>
@@ -350,7 +364,6 @@ export default function Chatbot() {
                           : m.text,
                     }}
                   />
-
                   <div className="cb-time">{m.time}</div>
                 </div>
               </div>
@@ -384,7 +397,7 @@ export default function Chatbot() {
       {!open && (
         <div className="cb-fab-fixed">
           <button className="cb-fab" onClick={() => setOpen(true)}>
-            💬
+            <FabIcon size={26} />
           </button>
         </div>
       )}
