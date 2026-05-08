@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-const BOT_NAME = "Virello Studio";
-const BOT_SUB  = "We're here to help";
+const API_BASE =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const SESSION_ID = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+const BOT_NAME = "Virello Studio";
+const BOT_SUB = "We're here to help";
+
+const SESSION_ID = `sess_${Date.now()}_${Math.random()
+  .toString(36)
+  .slice(2, 8)}`;
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
@@ -22,7 +26,6 @@ const css = `
   --radius: 20px;
 }
 
-/* ── FAB ── */
 .cb-fab-fixed {
   position: fixed;
   bottom: 28px;
@@ -65,10 +68,8 @@ const css = `
   align-items: center;
   justify-content: center;
   border: 2px solid white;
-  z-index: 1;
 }
 
-/* ── PANEL ── */
 .cb-panel {
   position: fixed;
   bottom: 28px;
@@ -88,7 +89,6 @@ const css = `
   font-family: 'DM Sans', sans-serif;
 }
 
-/* ── HEADER ── */
 .cb-header {
   background: var(--cream);
   padding: 18px;
@@ -124,7 +124,15 @@ const css = `
   font-size: 12px;
 }
 
-/* ── MESSAGES ── */
+.cb-close {
+  background: rgba(0,0,0,0.06);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
 .cb-msgs {
   flex: 1;
   padding: 16px;
@@ -219,43 +227,58 @@ function renderMarkdown(text) {
   return text.replace(/\n/g, "<br/>");
 }
 
-/* ✅ SINGLE UNIFIED BOT ICON */
-const BotAvatarIcon = ({ size = 18 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="8" width="18" height="12" rx="3" />
-    <path d="M9 8V6a3 3 0 016 0v2" />
-    <circle cx="9" cy="14" r="1.2" fill="white" stroke="none" />
-    <circle cx="15" cy="14" r="1.2" fill="white" stroke="none" />
-  </svg>
-);
-
+// ✅ UPDATED: Paper plane send icon matching the image
 const SendIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="22" y1="2" x2="11" y2="13" />
-    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M22 2L11 13"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M22 2L15 22L11 13L2 9L22 2Z"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
-/* ✅ FAB now uses SAME bot icon system */
-const FabIcon = ({ size = 26 }) => <BotAvatarIcon size={size} />;
+const FABIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <path
+      d="M4 6C4 4.895 4.895 4 6 4H22C23.105 4 24 4.895 24 6V17C24 18.105 23.105 19 22 19H15.5L10 24V19H6C4.895 19 4 18.105 4 17V6Z"
+      stroke="white"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    />
+    <circle cx="10" cy="12.5" r="1.2" fill="white" />
+    <circle cx="14" cy="12.5" r="1.2" fill="white" />
+    <circle cx="18" cy="12.5" r="1.2" fill="white" />
+  </svg>
+);
+
+// ✅ UPDATED: Clean assistant/bot avatar icon
+const AvatarIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <rect x="3" y="8" width="16" height="10" rx="4" stroke="white" strokeWidth="1.6" />
+    <circle cx="8" cy="13" r="1.3" fill="white" />
+    <circle cx="14" cy="13" r="1.3" fill="white" />
+    <path
+      d="M8 8V6.5C8 5.119 9.119 4 10.5 4H11.5C12.881 4 14 5.119 14 6.5V8"
+      stroke="white"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+    <path d="M6 8V9" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+    <path d="M16 8V9" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+    <path d="M3 13H1.5" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+    <path d="M19 13H20.5" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+  </svg>
+);
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -293,9 +316,11 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/chat`, {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           messages: [...buildHistory(), { role: "user", content: input }],
           sessionId: SESSION_ID,
@@ -313,7 +338,9 @@ export default function Chatbot() {
           time: ts(),
         },
       ]);
-    } catch {
+    } catch (error) {
+      console.error(error);
+
       setMessages((prev) => [
         ...prev,
         {
@@ -337,7 +364,7 @@ export default function Chatbot() {
           <div className="cb-header">
             <div className="cb-header-left">
               <div className="cb-avatar">
-                <BotAvatarIcon size={20} />
+                <AvatarIcon />
               </div>
 
               <div>
@@ -397,7 +424,7 @@ export default function Chatbot() {
       {!open && (
         <div className="cb-fab-fixed">
           <button className="cb-fab" onClick={() => setOpen(true)}>
-            <FabIcon size={26} />
+            <FABIcon />
           </button>
         </div>
       )}
