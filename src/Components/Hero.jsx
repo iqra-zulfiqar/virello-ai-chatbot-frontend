@@ -229,7 +229,7 @@ export default function Hero() {
         }
       `}</style>
 
-      <section className="hero-section">
+      <section className="hero-section" id="home">
 
         <div className={`hero-circle-top ${mounted ? "visible" : ""}`}>
           <img src={circle1Src} alt="" />
