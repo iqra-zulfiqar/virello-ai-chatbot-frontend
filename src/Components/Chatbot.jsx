@@ -364,7 +364,7 @@ const css = `
   .cb-bubble-wrap { max-width: 82%; }
   .cb-input { font-size: 16px; }
   .cb-input-row {
-    padding-bottom: env(safe-area-inset-bottom, 12px);
+    padding: 12px 14px 24px;
   }
   .cb-header {
     padding-top: 18px;
@@ -384,6 +384,9 @@ const css = `
   .cb-fab-fixed {
     right: 12px;
     left: auto;
+  }
+  .cb-input-row {
+    padding: 12px 14px 20px;
   }
   .cb-title { font-size: 15px; }
 }
